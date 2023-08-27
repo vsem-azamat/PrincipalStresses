@@ -3,12 +3,10 @@
 #include <QMouseEvent>
 #include <iostream>
 
-
 GLWidget::GLWidget(QWidget *parent) :
     QOpenGLWidget(parent)
 {
     setWindowTitle("Principial stresses");
-
 }
 
 GLWidget::~GLWidget()
@@ -21,10 +19,7 @@ void GLWidget::initializeGL()
     glClearColor(1, 1, 1, 1);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHT0);
-    //    glEnable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
-    //    glEnable(GL_MULTISAMPLE);
-
 }
 
 void GLWidget::resizeGL(int w, int h)
@@ -34,13 +29,10 @@ void GLWidget::resizeGL(int w, int h)
     glLoadIdentity();
     //    glFrustum(-1, 1, -1, 1, 1, 3);
     glOrtho(-1, 1, -1, 1, 1, 3);
-
 }
 
 void GLWidget::paintGL()
 {
-    initializeOpenGLFunctions();
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -51,11 +43,10 @@ void GLWidget::paintGL()
     drawCube(0.5);
 }
 
-
-void GLWidget::drawCube(float a)
+const GLfloat* GLWidget::getCubeVertices(const float& a)
 {
     // Cube vertex coordinates
-    static const GLfloat ver_cub[] = {
+    static const GLfloat cubeVertices[] = {
         // Front side
         -a, -a,  a,
         a, -a,  a,
@@ -87,9 +78,73 @@ void GLWidget::drawCube(float a)
         a,  a, -a,
         -a,  a, -a,
     };
+    return cubeVertices;
+}
 
+const GLuint* GLWidget::getCubeIndices() const
+{
     // Indices for each face
-    static const GLuint indices[] = {
+    static GLuint cubeIndices[] = {
+        0, 1, 2, 3, // Front side
+        4, 5, 6, 7, // Back side
+        8, 9, 10, 11, // Left side
+        12, 13, 14, 15, // Right side
+        16, 17, 18, 19, // Lower side
+        20, 21, 22, 23, // Upper side
+    };
+    return cubeIndices;
+}
+
+const GLfloat* GLWidget::getCubeNormals()
+{
+    static const GLfloat cubeNormals[] = {
+        0.0f, 0.0f, 1.0f, // Front side
+        0.0f, 0.0f, -1.0f, // Back side
+        -1.0f, 0.0f, 0.0f, // Left side
+        1.0f, 0.0f, 0.0f, // Right side
+        0.0f, -1.0f, 0.0f, // Lower side
+        0.0f, 1.0f, 0.0f // Upper side
+    };
+    return cubeNormals;
+}
+
+void GLWidget::drawCube(float a)
+{
+//    const GLfloat* test = getCubeVertices(a);
+//    const GLuint* cubeIndices = getCubeIndices();
+    static const GLfloat cubeVertices[] = {
+        // Front side
+        -a, -a,  a,
+        a, -a,  a,
+        a,  a,  a,
+        -a,  a,  a,
+        // Back side
+        a, -a, -a,
+        -a, -a, -a,
+        -a,  a, -a,
+        a,  a, -a,
+        // Left side
+        -a, -a, -a,
+        -a, -a,  a,
+        -a,  a,  a,
+        -a,  a, -a,
+        // Right side
+        a, -a,  a,
+        a, -a, -a,
+        a,  a, -a,
+        a,  a,  a,
+        // Lower side
+        -a, -a, -a,
+        a, -a, -a,
+        a, -a,  a,
+        -a, -a,  a,
+        // Upper side
+        -a,  a,  a,
+        a,  a,  a,
+        a,  a, -a,
+        -a,  a, -a,
+    };
+    static const GLuint cubeIndices[] = {
         0, 1, 2, 3, // Front side
         4, 5, 6, 7, // Back side
         8, 9, 10, 11, // Left side
@@ -98,24 +153,15 @@ void GLWidget::drawCube(float a)
         20, 21, 22, 23, // Upper side
     };
 
-    //    static const GLfloat normals[] = {
-    //        0.0f, 0.0f, 1.0f, // Front side
-    //        0.0f, 0.0f, -1.0f, // Back side
-    //        -1.0f, 0.0f, 0.0f, // Left side
-    //        1.0f, 0.0f, 0.0f, // Right side
-    //        0.0f, -1.0f, 0.0f, // Lower side
-    //        0.0f, 1.0f, 0.0f // Upper side
-    //    };
-
     GLuint vbo, ebo;
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(ver_cub), ver_cub, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
 
     // Включаем атрибут вершин в шейдере
     glEnableVertexAttribArray(0);
@@ -135,6 +181,14 @@ void GLWidget::drawCube(float a)
     glDisableVertexAttribArray(0);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);
+}
+
+void GLWidget::drawCubeTest(float a)
+{
+    makeCurrent();
+//    glClearColor(0.5, 0.5, 0.5, 1);
+
+    update();
 }
 
 void GLWidget::mousePressEvent(QMouseEvent* mo)

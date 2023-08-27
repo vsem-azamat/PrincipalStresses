@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <glwidget.h>
-#include <mohrcircleplot.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,9 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //    connect(ui->calculateButton, &QPushButton::clicked, glWidget, &GLWidget::drawMainCube);
-    //    connect(ui->calculateButton, &QPushButton::clicked, this, &MainWindow::on_calculateButton_clicked);
     mohrPlot = new MohrCirclePlot(ui->widget_2);
+    stressValues = new StressValues();
 }
 
 MainWindow::~MainWindow()
@@ -20,19 +17,41 @@ MainWindow::~MainWindow()
     delete ui;
     delete glWidget;
     delete mohrPlot;
+    delete stressValues;
 }
 
-void MainWindow::on_calculateButton_clicked()
+void MainWindow::on_buttonCalculate_clicked()
 {
-    //    float sigmaX = ui->inputSigmaX->text().toFloat();
-    //    float sigmaY = ui->inputSigmaY->text().toFloat();
-    //    float sigmaZ = ui->inputSigmaZ->text().toFloat();
+    stressValues->sigmaX = ui->inputSigmaX->text().toFloat();
+    stressValues->sigmaY = ui->inputSigmaY->text().toFloat();
+    stressValues->sigmaZ = ui->inputSigmaZ->text().toFloat();
+    stressValues->tauX = ui->inputTauX->text().toFloat();
+    stressValues->tauY = ui->inputTauY->text().toFloat();
+    stressValues->tauZ = ui->inputTauZ->text().toFloat();
 
-    //    float tauX = ui->inputTauX->text().toFloat();
-    //    float tauY = ui->inputTauY->text().toFloat();
-    //    float tauZ = ui->inputTauZ->text().toFloat();
-    //    MohrCirclePlot->draw();
+    Eigen::Vector3d principalStresses = StressCalculator::calcPrincipalStresses(*stressValues);
 
-    mohrPlot->draw(0,0,0);
+    // Console output
+    QString textOutput = "===== Principal stresses: =====\n";
+    textOutput += QString("σ1 = %1 MPa\n").arg(principalStresses[0]);
+    textOutput += QString("σ2 = %1 MPa\n").arg(principalStresses[1]);
+    textOutput += QString("σ3 = %1 MPa\n").arg(principalStresses[2]);
+    textOutput += QString("τ max = %1 MPa").arg((principalStresses[0] - principalStresses[2]) / 2);
+
+    QString currentText = ui->textBrowser->toPlainText();
+    QString newText = textOutput + "\n" + currentText;
+    ui->textBrowser->setText(newText);
+
+    // Plot output
+    mohrPlot->plotMohrCircle(principalStresses);
+
+    // OpenGL output
+    ui->widget->drawCubeTest(0);
+}
+
+
+void MainWindow::on_buttonClearOutput_clicked()
+{
+    ui->textBrowser->clear();
 }
 

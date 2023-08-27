@@ -13,13 +13,15 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mohrcircleplot.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    stresscalculator.cpp
 
 HEADERS += \
     glwidget.h \
     mainwindow.h \
     mohrcircleplot.h \
-    qcustomplot.h
+    qcustomplot.h \
+    stresscalculator.h
 
 FORMS += \
     mainwindow.ui
@@ -33,3 +35,6 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+# Custom
+INCLUDEPATH += /usr/include/eigen3

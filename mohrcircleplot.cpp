@@ -1,4 +1,5 @@
 #include "mohrcircleplot.h"
+#include <Eigen/Core>
 
 MohrCirclePlot::MohrCirclePlot(QWidget *parent)
     : parentWidget(parent)
@@ -10,18 +11,23 @@ MohrCirclePlot::MohrCirclePlot(QWidget *parent)
 
         // Set description
         plot->xAxis->setLabel("σ [MPa]");
-            plot->yAxis->setLabel("τ [MPa]");
+        plot->yAxis->setLabel("τ [MPa]");
     }
 }
 
-void MohrCirclePlot::draw(double sigma1, double sigma2, double sigma3)
+void MohrCirclePlot::plotMohrCircle(const Eigen::Vector3d& principalStresses)
 {
     if (!plot)
         return;
 
-    sigma1 = 60;
-    sigma2 = 0;
-    sigma3 = -20;
+    // Clear old plot
+    plot->clearPlottables();
+    plot->clearItems();
+    plot->setFont(QFont("Helvetica", 10));
+
+    float sigma1 = principalStresses[0];
+    float sigma2 = principalStresses[1];
+    float sigma3 = principalStresses[2];
 
     float center12 = (sigma1 + sigma2) / 2;
     float center23 = (sigma2 + sigma3) / 2;
@@ -53,26 +59,22 @@ void MohrCirclePlot::draw(double sigma1, double sigma2, double sigma3)
     QCPItemText *textSigma1 = new QCPItemText(plot);
     textSigma1->setPositionAlignment(Qt::AlignLeft);
     textSigma1->setText("σ1");
-        textSigma1->setFont(QFont("Helvetica", 10));
     textSigma1->position->setCoords(sigma1, 0);
 
     QCPItemText *textSigma2 = new QCPItemText(plot);
     textSigma2->setPositionAlignment(Qt::AlignLeft);
     textSigma2->setText("σ2");
-        textSigma2->setFont(QFont("Helvetica", 10));
     textSigma2->position->setCoords(sigma2, 0);
 
     QCPItemText *textSigma3 = new QCPItemText(plot);
     textSigma3->setPositionAlignment(Qt::AlignRight);
     textSigma3->setText("σ3");
-        textSigma3->setFont(QFont("Helvetica", 10));
     textSigma3->position->setCoords(sigma3, 0);
 
     // Set tau max annotations
     QCPItemText *textTauMax = new QCPItemText(plot);
     textTauMax->setPositionAlignment(Qt::AlignBottom);
     textTauMax->setText("τ max");
-        textTauMax->setFont(QFont("Helvetica", 10));
     textTauMax->position->setCoords(0, radius13);
 
     QCPItemLine *tauMaxLine = new QCPItemLine(plot);

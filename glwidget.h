@@ -14,14 +14,19 @@ public:
     GLWidget(QWidget *parent = nullptr);
     ~GLWidget();
 
+    void drawCubeTest(float a);
+    void drawCube(float a);
+
 private:
     float xRot, yRot, zRot;
     QPoint mPos;
     QTimer tmr;
-    void drawCube(float a);
-    void drawCubeTest(float a);
     void mousePressEvent(QMouseEvent* mo) override;
     void mouseMoveEvent(QMouseEvent* mo) override;
+
+    const GLfloat* getCubeVertices(const float& a);
+    const GLuint* getCubeIndices() const;
+    const GLfloat* getCubeNormals();
 
 protected:
     void initializeGL() override;

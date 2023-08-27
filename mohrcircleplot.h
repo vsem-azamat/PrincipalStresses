@@ -3,13 +3,14 @@
 
 #include <QWidget>
 #include <qcustomplot.h>
+#include <Eigen/Core>
 
 class MohrCirclePlot
 {
 public:
     MohrCirclePlot(QWidget *parent = nullptr);
 
-    void draw(double sigma1, double sigma2, double sigma3);
+    void plotMohrCircle(const Eigen::Vector3d& principalStresses);
 
 private:
     QWidget *parentWidget = nullptr;

@@ -1,10 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <iostream>
 #include <QMainWindow>
 #include <QVector>
+#include <QString>
+
 #include "glwidget.h"
 #include "mohrcircleplot.h"
+#include "stresscalculator.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,12 +23,15 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_calculateButton_clicked();
+    void on_buttonCalculate_clicked();
+
+    void on_buttonClearOutput_clicked();
 
 private:
     Ui::MainWindow *ui;
     GLWidget *glWidget;
     MohrCirclePlot *mohrPlot;
+    StressValues *stressValues;
 };
 
 #endif // MAINWINDOW_H
