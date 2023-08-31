@@ -1,5 +1,4 @@
 #include "stresscalculator.h"
-
 #include <unsupported/Eigen/Polynomials>
 #include <iostream>
 
@@ -15,21 +14,18 @@ Matrix3d StressCalculator::convertToStressMatrix(const StressValues& stressValue
     return stressMatrix;
 }
 
-
 Vector3d StressCalculator::calcPrincipalStresses(const StressValues& stressValues)
 {
     Matrix3d stressMatrix = convertToStressMatrix(stressValues);
     SelfAdjointEigenSolver<MatrixXd> solver(stressMatrix);
     Vector3d principalStresses = solver.eigenvalues().real();
-    std::sort(std::begin(principalStresses), std::end(principalStresses), std::greater<double>());
     return principalStresses;
 }
-
 
 Matrix3d StressCalculator::calcNormVectors(const StressValues& stressValues)
 {
     Matrix3d stressMatrix = convertToStressMatrix(stressValues);
     SelfAdjointEigenSolver<MatrixXd> solver(stressMatrix);
-    MatrixXd eigenVectors = solver.eigenvectors();
-    return eigenVectors;
+    MatrixXd planeVectors = solver.eigenvectors().real();
+    return planeVectors;
 }

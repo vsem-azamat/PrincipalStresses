@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>605</width>
-    <height>779</height>
+    <height>810</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -339,6 +339,38 @@
          </size>
         </property>
        </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="buttonX_YZ">
+          <property name="text">
+           <string>X ↔ YZ</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonY_XZ">
+          <property name="text">
+           <string>Y ↔ XZ</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonZ_YZ">
+          <property name="text">
+           <string>Z ↔ YZ</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonResetView">
+          <property name="text">
+           <string>Reset</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="Line" name="line_2">

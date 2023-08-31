@@ -24,8 +24,15 @@ public:
 
 private slots:
     void on_buttonCalculate_clicked();
-
     void on_buttonClearOutput_clicked();
+
+    void on_buttonX_YZ_clicked();
+
+    void on_buttonY_XZ_clicked();
+
+    void on_buttonZ_YZ_clicked();
+
+    void on_buttonClearInput_clicked();
 
 private:
     Ui::MainWindow *ui;

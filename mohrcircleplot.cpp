@@ -33,9 +33,9 @@ void MohrCirclePlot::plotMohrCircle(const Eigen::Vector3d& principalStresses)
     float center23 = (sigma2 + sigma3) / 2;
     float center13 = (sigma1 + sigma3) / 2;
 
-    float radius12 = (sigma1 - sigma2) / 2;
-    float radius23 = (sigma2 - sigma3) / 2;
-    float radius13 = (sigma1 - sigma3) / 2;
+    float radius12 = abs(sigma1 - sigma2) / 2;
+    float radius23 = abs(sigma2 - sigma3) / 2;
+    float radius13 = abs(sigma1 - sigma3) / 2;
 
     plot->addGraph();
 
@@ -87,8 +87,8 @@ void MohrCirclePlot::plotMohrCircle(const Eigen::Vector3d& principalStresses)
     tauMaxLine->setPen(pen);
 
     // Set axes ranges
-    plot->xAxis->setRange(sigma3*1.5, sigma1*1.5);
-    plot->yAxis->setRange(-radius13*1.5, radius13*1.5);
+    plot->xAxis->setRange(center13-radius13*1.3, center13+radius13*1.3);
+    plot->yAxis->setRange(-radius13*1.3, radius13*1.3);
 
     // Replot the graph
     plot->replot();
